@@ -36,36 +36,42 @@ export const SocketConnect = () => {
   }
 
   return (
-    <div>
+    <div className="chat-wrapper">
       <div className="chat-container">
-        {chatList.map((chat, index) => {
-          return (
-            <>
-              <div
-                key={index}
-                className={
-                  chat.role === "client"
-                    ? "message  sender-message"
-                    : "message receiver-message"
-                }
-              >
-                <p>{chat.message}</p>
-              </div>
-            </>
-          );
-        })}
-      </div>
-      <div className="input-container">
-        <input
-          type="text"
-          value={message}
-          placeholder="Type your message"
-          onChange={handleInputText}
-        />
-        <div>
-          <button onClick={handleSubmit}>
-            {!loader ? "Send" : <div id="loader" className="loader"></div>}
-          </button>
+        <div className="chat-header">
+          <h2 className="title">AI assistant</h2>
+        </div>
+        <div className="chat-body">
+          {chatList.map((chat, index) => {
+            return (
+              <>
+                <div
+                  key={index}
+                  className={
+                    chat.role === "client"
+                      ? "message  sender-message"
+                      : "message receiver-message"
+                  }
+                >
+                  <p>{chat.message}</p>
+                </div>
+              </>
+            );
+          })}
+        </div>
+        <div className="chat-footer">
+          <input
+            className="form-control"
+            type="text"
+            value={message}
+            placeholder="Type your message"
+            onChange={handleInputText}
+          />
+          <div>
+            <button className="send-btn" onClick={handleSubmit}>
+              {!loader ? "Send" : <div id="loader" className="loader"></div>}
+            </button>
+          </div>
         </div>
       </div>
     </div>
