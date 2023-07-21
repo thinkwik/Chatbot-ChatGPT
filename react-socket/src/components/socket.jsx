@@ -8,12 +8,16 @@ const socket = io("http://localhost:5000", {
 export const SocketConnect = () => {
   const [message, setMessage] = useState("");
   const [chatList, setChatList] = useState([]);
-  const [loader, setLoader] = useState(false);
 
   socket.on("receiveMessage", (data) => {
-    const newList = [...chatList, { role: "server", message: data.message }];
-    setChatList(newList);
-    setLoader(false);
+    const newList = [...chatList];
+    if(newList.length){
+      newList[newList.length - 1].message = data.message
+      newList[newList.length - 1].loading = false
+      
+      setChatList(newList);
+  
+    }
   });
 
   useEffect(() => {
@@ -24,10 +28,9 @@ export const SocketConnect = () => {
 
   function handleSubmit() {
     socket.emit("sendMessage", { message });
-    const newList = [...chatList, { role: "client", message: message }];
+    const newList = [...chatList, { role: "client", message: message, loading: false  }, { role: "server", message: "", loading: true  }];
     setChatList(newList);
     setMessage("");
-    setLoader(true);
   }
 
   function handleInputText(e) {
@@ -60,7 +63,17 @@ export const SocketConnect = () => {
                         : "message receiver-message"
                     }
                   >
-                    {loader && chatList.length === index ? (
+                 {chat.loading ? (
+                    <p className="typing-message">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </p>
+                  ) : (
+                    <p>{chat.message}</p>
+                  )}
+
+                    {/* {loader && chatList.length === index ? (
                       <p className="typing-message">
                         <span></span>
                         <span></span>
@@ -68,19 +81,10 @@ export const SocketConnect = () => {
                       </p>
                     ) : (
                       <p>{chat.message}</p>
-                    )}
+                    )} */}
                   </div>
                 </div>
-                {/* <div className="message-item">
-                  <img src={ImgChatbot} className="img-chatbot" />
-                  <div className="message typing-message">
-                    <p>
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                    </p>
-                  </div>
-                </div> */}
+               
               </>
             );
           })}
@@ -95,7 +99,7 @@ export const SocketConnect = () => {
           />
           <div>
             <button className="send-btn" onClick={handleSubmit}>
-              {!loader ? "Send" : <div id="loader" className="loader"></div>}
+              Send
             </button>
           </div>
         </div>
