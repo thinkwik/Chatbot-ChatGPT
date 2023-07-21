@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
 import "./socket.css";
-
+import ImgChatbot from "../images/chatbot.svg";
 const socket = io("http://localhost:5000", {
   path: "/api/socket.io",
 });
@@ -45,16 +45,42 @@ export const SocketConnect = () => {
           {chatList.map((chat, index) => {
             return (
               <>
-                <div
-                  key={index}
-                  className={
-                    chat.role === "client"
-                      ? "message  sender-message"
-                      : "message receiver-message"
-                  }
-                >
-                  <p>{chat.message}</p>
+                <div className="message-item">
+                  {chat.role != "client" ? (
+                    <img src={ImgChatbot} className="img-chatbot" />
+                  ) : (
+                    ""
+                  )}
+
+                  <div
+                    key={index}
+                    className={
+                      chat.role === "client"
+                        ? "message  sender-message"
+                        : "message receiver-message"
+                    }
+                  >
+                    {loader && chatList.length === index ? (
+                      <p className="typing-message">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </p>
+                    ) : (
+                      <p>{chat.message}</p>
+                    )}
+                  </div>
                 </div>
+                {/* <div className="message-item">
+                  <img src={ImgChatbot} className="img-chatbot" />
+                  <div className="message typing-message">
+                    <p>
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </p>
+                  </div>
+                </div> */}
               </>
             );
           })}
